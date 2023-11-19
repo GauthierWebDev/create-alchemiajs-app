@@ -1,4 +1,6 @@
 import type { RequestHandler, Request, Response, NextFunction } from "express";
+import { buildLangRoutePrefix } from "@/functions";
+import { languages } from "@/config";
 import { Router } from "express";
 import { Logger } from "@/utils";
 
@@ -29,6 +31,12 @@ const buildRoutesFromController = (
 
       if (middlewares && middlewares[key]) {
         middlewaresToApply.push(...middlewares[key]);
+      }
+
+      if (!route.startsWith("/api")) {
+        route = `/${buildLangRoutePrefix()}/${route}`
+          .replace(/\/+/g, "/")
+          .replace(/\/$/, "");
       }
 
       router[method](
