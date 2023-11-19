@@ -1,6 +1,6 @@
 {
   "name": "create-alchemiajs-app",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Create AlchemiaJS App",
   "bin": {
     "create-alchemiajs-app": "./index.js"
@@ -8,5 +8,8 @@
   "preferGlobal": true,
   "dependencies": {
     "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2"
   }
 }
