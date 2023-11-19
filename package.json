@@ -2,6 +2,9 @@
   "name": "create-alchemiajs-app",
   "version": "0.0.1",
   "description": "Create AlchemiaJS App",
+  "scripts": {
+    "publish": "pnpm publish --access public"
+  },
   "bin": {
     "create-alchemiajs-app": "./index.js"
   },
