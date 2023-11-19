@@ -1,10 +1,15 @@
+import { ErrorController } from "./controllers";
 import * as middlewares from "@/middlewares";
 import express from "express";
+import routes from "@/routes";
 
 const server = express();
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(middlewares.minify);
+
+server.use(routes);
+server.use(ErrorController.prototype.notFound);
 
 export default server;
