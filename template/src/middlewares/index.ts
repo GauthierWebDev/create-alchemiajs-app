@@ -1,1 +1,1 @@
-export { default as minify } from "./minify";
+export { default as minify } from "./minifyMiddleware";
