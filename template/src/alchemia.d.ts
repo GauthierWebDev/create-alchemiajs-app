@@ -3,6 +3,15 @@ type AlchemiaResponse = {
   body: string | object | null;
 };
 
+type AlchemiaDictionaryTexts = {
+  [key: string]: string | number | null | string[] | AlchemiaDictionaryTexts;
+};
+
+type AlchemiaDictionary = {
+  language: string;
+  texts: AlchemiaDictionaryTexts;
+};
+
 type AlchemiaMethod = "get" | "post" | "put" | "delete";
 
 type AlchemiaMethods = {

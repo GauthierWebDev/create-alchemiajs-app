@@ -1,15 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { findControllerMethodByPath } from "@/functions";
+import { languages, settings } from "@/config";
 import { Logger } from "@/utils";
 
-/**
- * Represents a controller class that handles HTTP requests and responses.
- */
 class Controller {
   protected req: Request;
   protected res: Response;
   protected next: NextFunction;
   protected statusCode: number = 200;
+  protected breadcrumbs: string[] = [];
+  protected lang: string = languages.FALLBACK;
   protected params: { [key: string]: any } = {};
   protected readonly privateFields: string[] = [];
 
@@ -17,8 +17,14 @@ class Controller {
     this.req = req;
     this.res = res;
     this.next = next;
+    this.lang = req.originalUrl.split("/")[1] || languages.FALLBACK;
 
     this.log();
+  }
+
+  protected setBreadcrumbs(breadcrumbs: string[]) {
+    this.breadcrumbs = breadcrumbs;
+    return this;
   }
 
   protected addParam(key: string, value: any) {
@@ -26,37 +32,45 @@ class Controller {
     return this;
   }
 
-  /**
-   * Removes a parameter from the controller's params object.
-   * @param key - The key of the parameter to be removed.
-   * @returns The updated instance of the controller.
-   */
   protected removeParam(key: string) {
     delete this.params[key];
     return this;
   }
 
-  /**
-   * Sets the status code for the instance.
-   * @param code - The status code to set.
-   * @returns The updated instance of the controller.
-   */
   protected setCode(code: number) {
     this.statusCode = code;
     return this;
   }
 
-  /**
-   * Sends a 404 Not Found response.
-   */
   protected sendNotFound() {
-    this.setCode(404).sendResponse();
+    const isApi = this.req.originalUrl.startsWith("/api");
+    this.setCode(404);
+
+    if (isApi) this.sendResponse();
+    else this.render("errors/notFound");
   }
 
-  /**
-   * Sends a response with the specified data.
-   * @param data The data to be included in the response.
-   */
+  protected async render(view: string, data: object = {}) {
+    const params = {
+      ...data,
+      ...this.params,
+      lang: this.lang,
+      availableLanguages: languages.AVAILABLE,
+      breadcrumbs: this.breadcrumbs,
+      isProduction: settings.NODE_ENV === "production",
+    };
+
+    try {
+      this.res
+        .status(this.statusCode || 200)
+        .render(`pages/${view}.njk`, params);
+
+      this.log("out", view);
+    } catch (error) {
+      this.sendNotFound();
+    }
+  }
+
   protected sendResponse(data: object = {}): void {
     this.res.status(this.statusCode).json({
       ...this.params,
@@ -66,11 +80,6 @@ class Controller {
     this.log("out");
   }
 
-  /**
-   * Removes private fields from the given data object.
-   * @param data - The data object from which to remove private fields.
-   * @returns A new object with the private fields removed.
-   */
   protected removePrivateFields(data: { [key: string | number]: any }): {
     [key: string | number]: any;
   } {
@@ -83,11 +92,7 @@ class Controller {
     return newData;
   }
 
-  /**
-   * Logs the controller method execution and request/response information.
-   * @param direction - The direction of the log, either "in" for incoming request or "out" for outgoing response. Default is "in".
-   */
-  protected log(direction: "in" | "out" = "in"): void {
+  protected log(direction: "in" | "out" = "in", view?: string): void {
     const arrow = direction === "in" ? "⬅️" : "➡️";
 
     const controllerMethod = findControllerMethodByPath(
@@ -110,6 +115,8 @@ class Controller {
       } else {
         message += ` | ${Logger.chalk.green.bold(this.statusCode)}`;
       }
+
+      if (view) message += ` | pages/${view}.njk`;
     }
 
     Logger.setTitle("⚙️ Controller", "info").addMessage(message).send();
