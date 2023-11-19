@@ -29,6 +29,12 @@ jobs:
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit: true
+          base-ref: main
+          update-changelog: true
+          access: public
 
       - name: Publish
         run: pnpm publish --access public
