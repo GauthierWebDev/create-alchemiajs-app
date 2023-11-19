@@ -13,6 +13,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, "..", "public")));
 server.use(middlewares.minify);
+server.use(middlewares.lang);
 
 const env = nunjucks.configure(path.join(__dirname, "..", "views"), {
   autoescape: true,

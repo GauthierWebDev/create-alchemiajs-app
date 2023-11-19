@@ -47,7 +47,7 @@ class Controller {
     this.setCode(404);
 
     if (isApi) this.sendResponse();
-    else this.render("errors/notFound");
+    else this.render("../errors/notFound");
   }
 
   protected async render(view: string, data: object = {}) {

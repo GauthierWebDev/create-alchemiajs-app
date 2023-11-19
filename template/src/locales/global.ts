@@ -10,5 +10,5 @@ export default {
     },
   },
   FRAMEWORK: "AlchemiaJS",
-  TITLE: "Carl Sagan",
+  TITLE: "AlchemiaJS",
 };
