@@ -1,0 +1,23 @@
+{% extends "layouts/base.njk" %}
+
+{% block title %}
+  Temp | {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <section class="flex flex-col gap-2 w-full">
+    <h1 class="text-4xl font-bold">
+      {{ "PAGES.RESULTS.TITLE" | translate(lang) }}
+    </h1>
+    <p class="text-xl">
+      {{ "PAGES.RESULTS.DESCRIPTION" | translate(lang) }}
+    </p>
+  </section>
+
+  {% include "./results/total.njk" %}
+  {% include "./results/a11y.njk" %}
+
+  <section class="flex flex-col gap-4 w-full">
+    {{ results | stringify | safe }}
+  </section>
+{% endblock %}
