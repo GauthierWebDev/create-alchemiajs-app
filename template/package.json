@@ -4,8 +4,16 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "pnpm run dev:server",
+    "dev": "concurrently --names \"CSS,JS,SERVER\" -c \"auto\" \"pnpm run dev:css\" \"pnpm run dev:js\" \"pnpm run dev:server\"",
+    "dev:css": "tailwindcss -i ./assets/css/index.css -o ./public/css/styles.css -w",
+    "dev:js": "watchify -p [ tsify --project tsconfig.json ] ./assets/ts/index.ts -o ./public/js/app.js -v",
     "dev:server": "nodemon",
+    "prod": "pnpm run build && pnpm run serve",
+    "build": "pnpm run build:server && pnpm run build:css && pnpm run build:js",
+    "build:server": "tsup --entry.server-prod src/index.ts --format cjs",
+    "build:js": "browserify -p [ tsify --project tsconfig.json ] ./assets/ts/index.ts -p [ tinyify ] -o ./public/js/app.min.js",
+    "build:css": "tailwindcss -i ./assets/css/index.css -o ./public/css/styles.min.css --minify",
+    "serve": "node dist/server-prod.js",
     "alambic": "ts-node ./alambic"
   },
   "keywords": [],
@@ -16,11 +24,16 @@
     "@types/html-minifier-terser": "^7.0.2",
     "@types/node": "^20.9.2",
     "@types/nunjucks": "^3.2.6",
+    "browserify": "^17.0.0",
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.1",
+    "tinyify": "^4.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsify": "^5.0.4",
     "tsup": "^8.0.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "watchify": "^4.0.0"
   },
   "dependencies": {
     "chalk": "^4",
