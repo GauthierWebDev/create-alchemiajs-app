@@ -5,6 +5,7 @@ import routes from "@/routes";
 
 const server = express();
 
+server.use(middlewares.poweredBy);
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(middlewares.minify);
