@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently --names \"CSS,JS,SERVER\" -c \"auto\" \"pnpm run dev:css\" \"pnpm run dev:js\" \"pnpm run dev:serve\"",
+    "dev": "concurrently --names \"CSS,JS,SERVER\" -c \"auto\" \"pnpm run dev:css\" \"pnpm run dev:js\" \"pnpm run dev:server\"",
     "dev:css": "tailwindcss -i ./assets/css/index.css -o ./public/css/styles.css -w",
     "dev:js": "watchify -p [ tsify --project tsconfig.json ] ./assets/ts/index.ts -o ./public/js/app.js -v",
     "dev:server": "nodemon",
