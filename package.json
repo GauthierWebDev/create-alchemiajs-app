@@ -1,6 +1,6 @@
 {
   "name": "create-alchemiajs-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create AlchemiaJS App",
   "scripts": {
     "publish": "pnpm publish --access public"
