@@ -9,7 +9,10 @@ const templateLocation = path.resolve(__dirname, "template");
 
 async function cloneTemplate() {
   try {
-    await fs.copy(templateLocation, projectPath);
+    await Promise.all([
+      fs.copy(templateLocation, projectPath),
+      fs.copy(`${templateLocation}/.gitignore`, `${projectPath}/.gitignore`),
+    ]);
   } catch (error) {
     throw new Error(`Error copying template: ${error.message}`);
   }
@@ -18,6 +21,9 @@ async function cloneTemplate() {
 async function createApp() {
   try {
     await cloneTemplate();
+    console.log(
+      `Created project "${projectName}" at ${projectPath}!\nHappy alchemizing! 🧪`
+    );
   } catch (error) {
     throw new Error(`Error creating app: ${error.message}`);
   }
