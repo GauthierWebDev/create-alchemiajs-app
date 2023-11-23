@@ -1,6 +1,9 @@
 import * as controllers from "@/controllers";
 
-const findControllerMethodByPath = (controllerName: string, path: string) => {
+const findControllerMethodByPath = (
+  controllerName: string,
+  path: string | undefined
+) => {
   const controller = controllers[
     controllerName as keyof typeof controllers
   ] as any;

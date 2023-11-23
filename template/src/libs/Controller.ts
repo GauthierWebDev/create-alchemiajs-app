@@ -1,23 +1,21 @@
-import type { Request, Response, NextFunction } from "express";
+import type { FastifyRequest, FastifyReply } from "fastify";
 import { findControllerMethodByPath } from "@/functions";
 import { languages, settings } from "@/config";
 import { Logger } from "@/utils";
 
 class Controller {
-  protected req: Request;
-  protected res: Response;
-  protected next: NextFunction;
+  protected request: FastifyRequest;
+  protected reply: FastifyReply;
   protected statusCode: number = 200;
   protected breadcrumbs: string[] = [];
   protected lang: string = languages.FALLBACK;
   protected params: { [key: string]: any } = {};
   protected readonly privateFields: string[] = [];
 
-  constructor(req: Request, res: Response, next: NextFunction) {
-    this.req = req;
-    this.res = res;
-    this.next = next;
-    this.lang = req.originalUrl.split("/")[1] || languages.FALLBACK;
+  constructor(request: FastifyRequest, reply: FastifyReply) {
+    this.request = request;
+    this.reply = reply;
+    this.lang = request.originalUrl.split("/")[1] || languages.FALLBACK;
 
     this.log();
   }
@@ -43,7 +41,7 @@ class Controller {
   }
 
   protected sendNotFound() {
-    const isApi = this.req.originalUrl.startsWith("/api");
+    const isApi = this.request.originalUrl.startsWith("/api");
     this.setCode(404);
 
     if (isApi) this.sendResponse();
@@ -61,9 +59,9 @@ class Controller {
     };
 
     try {
-      this.res
+      this.reply
         .status(this.statusCode || 200)
-        .render(`pages/${view}.njk`, params);
+        .view(`pages/${view}.njk`, params);
 
       this.log("out", view);
     } catch (error) {
@@ -72,7 +70,7 @@ class Controller {
   }
 
   protected sendResponse(data: object = {}): void {
-    this.res.status(this.statusCode).json({
+    this.reply.status(this.statusCode).json({
       ...this.params,
       ...data,
     });
@@ -97,15 +95,15 @@ class Controller {
 
     const controllerMethod = findControllerMethodByPath(
       this.constructor.name,
-      this.req.path
+      this.request.raw.url
     );
 
     let message = `${arrow} `;
-    message += ` [${this.req.method}] `;
+    message += ` [${this.request.method}] `;
     if (this.constructor.name && controllerMethod) {
       message += `| ${this.constructor.name}.${controllerMethod} `;
     }
-    message += `| ${this.req.path}`;
+    message += `| ${this.request.raw.url}`;
 
     if (direction === "out") {
       if (this.statusCode >= 400) {

@@ -1,15 +1,10 @@
-import type { RequestHandler, Request, Response, NextFunction } from "express";
 import { buildLangRoutePrefix } from "@/functions";
-import { languages } from "@/config";
-import { Router } from "express";
 import { Logger } from "@/utils";
-
-const router = Router();
 
 type AlchemiaRouteHistory = {
   middlewares: string[];
   classMethod: string;
-  httpMethod: string;
+  httpMethod: AlchemiaMethod;
   route: string;
 };
 
@@ -27,7 +22,7 @@ const buildRoutesFromController = (
       const method = httpMethods[key];
       if (!method) return;
 
-      const middlewaresToApply: RequestHandler[] = [];
+      const middlewaresToApply: AlchemiaMiddleware[] = [];
 
       if (middlewares && middlewares[key]) {
         middlewaresToApply.push(...middlewares[key]);
@@ -38,15 +33,6 @@ const buildRoutesFromController = (
           .replace(/\/+/g, "/")
           .replace(/\/$/, "");
       }
-
-      router[method](
-        route,
-        ...middlewaresToApply,
-        (req: Request, res: Response, next: NextFunction) => {
-          const instance = new Controller(req, res, next);
-          instance[key]();
-        }
-      );
 
       addedRoutes.push({
         middlewares: middlewaresToApply.map((middleware) => middleware.name),
@@ -90,7 +76,7 @@ const buildRoutesFromController = (
     );
   }
 
-  return router;
+  return addedRoutes;
 };
 
 export default buildRoutesFromController;

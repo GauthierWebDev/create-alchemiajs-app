@@ -9,7 +9,7 @@ if ("undefined" === typeof fetch) {
   process.exit(1);
 }
 
-server.listen(settings.PORT, () => {
+server.listen({ port: settings.PORT }, () => {
   const parts = [];
 
   parts.push(Logger.chalk.green("Server started at:"));

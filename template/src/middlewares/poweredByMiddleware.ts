@@ -1,19 +1,17 @@
-import type { Request, Response, NextFunction } from "express";
+import type { FastifyRequest, FastifyReply } from "fastify";
 
 /**
  * Middleware function to set the "X-Powered-By" header to "AlchemiaJS".
- *
- * @param _req - The request object.
- * @param res - The response object.
- * @param next - The next function to call.
+ * @param _req - Fastify request object.
+ * @param res - Fastify reply object.
+ * @param next - Fastify next function.
  */
-const minifyHtmlMiddleware = (
-  _req: Request,
-  res: Response,
-  next: NextFunction
+const minifyHtmlMiddleware = async (
+  _req: FastifyRequest,
+  res: FastifyReply,
+  next: Function
 ) => {
-  res.set("X-Powered-By", "AlchemiaJS");
-
+  res.header("X-Powered-By", "AlchemiaJS");
   next();
 };
 
