@@ -27,9 +27,7 @@ const routes: FastifyPluginCallback = (fastify, _, done) => {
     controllerRoutes.forEach(async (route) => {
       fastify[route.httpMethod](
         route.route,
-        {
-          preHandler: [],
-        },
+        { preHandler: [] },
         async (request: FastifyRequest, reply: FastifyReply) => {
           const instance = new Controller(request, reply);
           await instance[route.classMethod]();

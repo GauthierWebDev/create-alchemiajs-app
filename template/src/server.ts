@@ -1,13 +1,13 @@
+import fastifyCaching from "@fastify/caching";
 import * as middlewares from "@/middlewares";
+import htmlMinifier from "html-minifier";
 import * as filters from "@/filters";
 import nunjucks from "nunjucks";
 import routes from "@/routes";
 import Fastify from "fastify";
 import path from "path";
 
-const server = Fastify({
-  // enable minimization
-});
+const server = Fastify();
 
 const viewConfig = {
   engine: {
@@ -20,10 +20,23 @@ const viewConfig = {
         env.addFilter(filterName, filters[filterName as keyof typeof filters]);
       });
     },
+    useHtmlMinifier: htmlMinifier,
+    htmlMinifierOptions: {
+      removeComments: true,
+      removeCommentsFromCDATA: true,
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes: true,
+      removeEmptyAttributes: true,
+    },
   },
 };
 
 server
+  .register(fastifyCaching, {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    privacy: "public",
+  })
   .register(require("@fastify/static"), {
     root: path.join(__dirname, "..", "public"),
     prefix: "/",
