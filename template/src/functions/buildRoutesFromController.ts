@@ -22,7 +22,7 @@ const buildRoutesFromController = (
       const method = httpMethods[key];
       if (!method) return;
 
-      const middlewaresToApply: AlchemiaMiddleware[] = [];
+      const middlewaresToApply: string[] = [];
 
       if (middlewares && middlewares[key]) {
         middlewaresToApply.push(...middlewares[key]);
@@ -35,9 +35,9 @@ const buildRoutesFromController = (
       }
 
       addedRoutes.push({
-        middlewares: middlewaresToApply.map((middleware) => middleware.name),
         httpMethod: httpMethods[key],
         classMethod: key,
+        middlewares: middlewaresToApply,
         route,
       });
     } catch (err: any) {
@@ -46,7 +46,7 @@ const buildRoutesFromController = (
         .send();
 
       errorRoutes.push({
-        middlewares: middlewares[key].map((middleware) => middleware.name),
+        middlewares: middlewares[key],
         httpMethod: httpMethods[key],
         classMethod: key,
         route,

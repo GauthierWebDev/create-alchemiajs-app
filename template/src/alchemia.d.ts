@@ -23,7 +23,7 @@ type AlchemiaRoutes = {
 };
 
 type AlchemiaMiddlewares = {
-  [key: string]: AlchemiaMiddleware[];
+  [key: string]: string[];
 };
 
 type AlchemiaMiddleware = (

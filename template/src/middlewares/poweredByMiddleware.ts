@@ -6,13 +6,14 @@ import type { FastifyRequest, FastifyReply } from "fastify";
  * @param res - Fastify reply object.
  * @param next - Fastify next function.
  */
-const minifyHtmlMiddleware = async (
+const minifyHtmlMiddleware = (
   _req: FastifyRequest,
   res: FastifyReply,
+  payload: any,
   next: Function
 ) => {
   res.header("X-Powered-By", "AlchemiaJS");
-  next();
+  next(null, payload);
 };
 
 export default minifyHtmlMiddleware;
