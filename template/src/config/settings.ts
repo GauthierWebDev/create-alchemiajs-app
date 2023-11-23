@@ -1,5 +1,5 @@
 const settings = {
-  PORT: process.env.PORT || 3000,
+  PORT: Number(process.env.PORT || 3000),
   DOMAIN: process.env.DOMAIN || "localhost",
   PROTOCOL: process.env.PROTOCOL || "http",
   NODE_ENV: process.env.APP_ENV || "development",

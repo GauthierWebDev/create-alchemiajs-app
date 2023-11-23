@@ -31,8 +31,12 @@ const findText = (key: string, { texts }: AlchemiaDictionary) => {
   return text || `{{ ${key} }}`;
 };
 
-const translate = (key: string, lang: string, ...fixedValues: string[]) => {
-  let language = lang;
+function translate(
+  this: NunjucksFilterInstance,
+  key: string,
+  ...fixedValues: string[]
+) {
+  let language = this.ctx.lang;
   if (
     !languages.AVAILABLE.find(
       (availableLang) => availableLang.code === language
@@ -58,6 +62,6 @@ const translate = (key: string, lang: string, ...fixedValues: string[]) => {
   }
 
   return text;
-};
+}
 
 export default translate;

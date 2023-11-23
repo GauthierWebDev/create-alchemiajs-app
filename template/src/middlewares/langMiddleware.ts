@@ -1,7 +1,11 @@
-import type { Request, Response, NextFunction } from "express";
+import type { FastifyRequest, FastifyReply, FastifyNext } from "fastify";
 import { languages } from "@/config";
 
-const langMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const langMiddleware = (
+  req: FastifyRequest,
+  res: FastifyReply,
+  next: FastifyNext
+) => {
   const fallbackLang = languages.FALLBACK;
   const availableLangs = languages.AVAILABLE;
 
@@ -11,7 +15,7 @@ const langMiddleware = (req: Request, res: Response, next: NextFunction) => {
     availableLangs.find((availableLang) => availableLang.code === lang) ||
     lang === "api"
   ) {
-    res.locals.lang = lang;
+    res.lang = lang;
     return next();
   }
 

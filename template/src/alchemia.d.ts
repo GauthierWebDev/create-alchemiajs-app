@@ -23,8 +23,14 @@ type AlchemiaRoutes = {
 };
 
 type AlchemiaMiddlewares = {
-  [key: string]: import("express").RequestHandler[];
+  [key: string]: string[];
 };
+
+type AlchemiaMiddleware = (
+  req: import("fastify").FastifyRequest,
+  res: import("fastify").FastifyReply,
+  next: (err?: Error) => void
+) => void;
 
 type AlchemiaController = {
   _middlewares: AlchemiaMiddlewares;
