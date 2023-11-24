@@ -2,7 +2,7 @@ import { settings } from "@/config";
 import { Logger } from "@/utils";
 import server from "@/server";
 
-server.listen({ port: settings.PORT }, () => {
+server.listen({ port: settings.PORT, host: "0.0.0.0" }, () => {
   const parts = [];
 
   parts.push(Logger.chalk.green("Server started at:"));
