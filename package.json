@@ -1,6 +1,6 @@
 {
   "name": "create-alchemiajs-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create AlchemiaJS App",
   "bin": {
     "create-alchemiajs-app": "./index.js"
