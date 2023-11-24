@@ -2,13 +2,6 @@ import { settings } from "@/config";
 import { Logger } from "@/utils";
 import server from "@/server";
 
-if ("undefined" === typeof fetch) {
-  console.error(
-    "Please use a recent version of Node.js that supports native fetch. (Node.js >= 18.0.0)"
-  );
-  process.exit(1);
-}
-
 server.listen({ port: settings.PORT }, () => {
   const parts = [];
 

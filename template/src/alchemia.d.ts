@@ -37,3 +37,20 @@ type AlchemiaController = {
   _methods: AlchemiaMethods;
   _routes: AlchemiaRoutes;
 };
+
+type AlchemiaQueryBuilderInstructions = {
+  select: string[];
+  where: string[];
+  orWhere: string[];
+  join: string[];
+  on: string[];
+  groupBy: string[];
+  having: string[];
+  orderBy: string[];
+  limit: string[];
+};
+
+type AlchemiaQueryBuilderInstruction =
+  AlchemiaQueryBuilderInstructions[keyof AlchemiaQueryBuilderInstructions];
+
+type AlchemiaQueryBuilderField = string | number | null | string[] | number[];
