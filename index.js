@@ -1,18 +1,37 @@
 #!/usr/bin/env node
 
-const fs = require("fs-extra");
+const shell = require("shelljs");
 const path = require("path");
 
-const projectName = process.argv[2] || "alchemia-js";
-const projectPath = path.resolve(process.cwd(), projectName);
-const templateLocation = path.resolve(__dirname, "template");
+const rawProjectPath = process.argv[2] || "alchemia-js";
+const projectPath = path.resolve(process.cwd(), rawProjectPath);
 
 async function cloneTemplate() {
+  const repo = "https://github.com/GauthierWebDev/AlchemiaJS.git";
+  const projectName = path.basename(projectPath);
+
   try {
-    await Promise.all([
-      fs.copy(templateLocation, projectPath),
-      fs.copy(`${templateLocation}/.gitignore`, `${projectPath}/.gitignore`),
-    ]);
+    console.log(`- Cloning template from ${repo} into ${projectPath}...`);
+    shell.exec(`git clone ${repo} ${projectPath}`, { silent: true });
+
+    if (projectName !== "alchemia-js") {
+      console.log(
+        `- Updating package.json with project name "${projectName}"...`
+      );
+      shell.sed(
+        "-i",
+        '"name": "alchemia-js"',
+        `"name": "${projectName}"`,
+        `${projectPath}/package.json`
+      );
+    }
+
+    console.log("- Removing template .git directory...");
+    shell.rm("-rf", `${projectPath}/.git`);
+
+    console.log(
+      `\nCreated project "${projectName}" at ${projectPath}!\nHappy alchemizing! 🧪`
+    );
   } catch (error) {
     throw new Error(`Error copying template: ${error.message}`);
   }
@@ -21,9 +40,6 @@ async function cloneTemplate() {
 async function createApp() {
   try {
     await cloneTemplate();
-    console.log(
-      `Created project "${projectName}" at ${projectPath}!\nHappy alchemizing! 🧪`
-    );
   } catch (error) {
     throw new Error(`Error creating app: ${error.message}`);
   }
